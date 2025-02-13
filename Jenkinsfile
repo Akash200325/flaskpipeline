@@ -21,7 +21,6 @@ pipeline {
                 bat '''
                 if exist %VENV% rmdir /s /q %VENV%
                 python -m venv %VENV%
-                call %VENV%\\Scripts\\activate
                 '''
             }
         }
@@ -30,9 +29,8 @@ pipeline {
             steps {
                 echo "Installing dependencies..."
                 bat '''
-                call %VENV%\\Scripts\\activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                call %VENV%\\Scripts\\activate && pip install --upgrade pip
+                call %VENV%\\Scripts\\activate && pip install -r requirements.txt
                 '''
             }
         }
@@ -41,7 +39,10 @@ pipeline {
             steps {
                 echo "Stopping existing Flask app (if running)..."
                 bat '''
-                tasklist | findstr /I "python.exe" && taskkill /F /IM python.exe /T || echo No existing process found
+                for /f "tokens=2 delims=," %%A in ('tasklist /FI "IMAGENAME eq python.exe" /FO CSV /NH') do (
+                    echo Killing process %%A
+                    taskkill /F /PID %%A
+                ) || echo No existing process found
                 '''
             }
         }
@@ -51,7 +52,7 @@ pipeline {
                 echo "Starting Flask app..."
                 bat '''
                 call %VENV%\\Scripts\\activate
-                start /B python app.py > nohup.out 2>&1
+                start /B python app.py > flask.log 2>&1
                 echo "Flask app started successfully!"
                 '''
             }
