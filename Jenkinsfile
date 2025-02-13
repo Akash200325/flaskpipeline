@@ -6,7 +6,7 @@ pipeline {
             steps {
                 git branch: 'main',
                     credentialsId: 'github_token',
-                    url: 'https://github.com/KavyashreeTR/FlaskJenkinsApp.git'
+                    url: 'https://github.com/kavyaramesh18/FlaskJenkinsApp.git'
 
             }
         }
