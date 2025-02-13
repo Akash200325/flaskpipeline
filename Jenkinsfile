@@ -4,7 +4,9 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/KavyashreeTR/FlaskJenkinsApp.git'
+                git branch: 'main',
+                    credentialsId: 'github_token',
+                    url: 'https://github.com/KavyashreeTR/FlaskJenkinsApp.git'
 
             }
         }
