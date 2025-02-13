@@ -21,7 +21,7 @@ pipeline {
                 bat '''
                 if exist %VENV% rmdir /s /q %VENV%
                 python -m venv %VENV%
-                call %VENV%\\Scripts\\activate
+                call %VENV%\Scripts\activate
                 '''
             }
         }
@@ -30,8 +30,8 @@ pipeline {
             steps {
                 echo "Installing dependencies..."
                 bat '''
-                call %VENV%\\Scripts\\activate
-                pip install --upgrade pip
+                call %VENV%\Scripts\activate
+                python -m pip install --upgrade pip
                 pip install -r requirements.txt
                 '''
             }
@@ -50,7 +50,8 @@ pipeline {
             steps {
                 echo "Starting Flask app..."
                 bat '''
-                call %VENV%\\Scripts\\activate
+                call %VENV%\Scripts\activate
+                python -m pip install --upgrade pip
                 start /B python app.py > nohup.out 2>&1
                 echo "Flask app started successfully!"
                 '''
