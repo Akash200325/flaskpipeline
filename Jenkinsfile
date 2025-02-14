@@ -41,8 +41,9 @@ pipeline {
                 bat '''
                 for /f "tokens=2 delims=," %%A in ('tasklist /FI "IMAGENAME eq python.exe" /FO CSV /NH') do (
                     echo Killing process %%A
-                    taskkill /F /PID %%A >nul 2>&1 || echo "Process not found, continuing..."
+                    taskkill /F /PID %%A >nul 2>&1 || ( echo "Process not found, continuing..." & exit /B 0 )
                 )
+                exit /B 0
                 '''
             }
         }
