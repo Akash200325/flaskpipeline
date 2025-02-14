@@ -29,7 +29,7 @@ pipeline {
             steps {
                 echo "Installing dependencies..."
                 bat '''
-                call %VENV%\\Scripts\\activate && pip install --upgrade pip
+                call %VENV%\\Scripts\\activate && python -m pip install --upgrade pip
                 call %VENV%\\Scripts\\activate && pip install -r requirements.txt
                 '''
             }
@@ -41,7 +41,7 @@ pipeline {
                 bat '''
                 for /f "tokens=2 delims=," %%A in ('tasklist /FI "IMAGENAME eq python.exe" /FO CSV /NH') do (
                     echo Killing process %%A
-                    taskkill /F /PID %%A
+                    taskkill /F /PID %%A >nul 2>&1
                 ) || echo No existing process found
                 '''
             }
@@ -53,7 +53,7 @@ pipeline {
                 bat '''
                 call %VENV%\\Scripts\\activate
                 start /B python app.py > flask.log 2>&1
-                echo "Flask app started successfully!"
+                echo Flask app started successfully!
                 '''
             }
         }
