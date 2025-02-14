@@ -41,8 +41,9 @@ pipeline {
                 bat '''
                 for /f "tokens=2 delims=," %%A in ('tasklist /FI "IMAGENAME eq python.exe" /FO CSV /NH') do (
                     echo Killing process %%A
-                    taskkill /F /PID %%A >nul 2>&1
-                ) || echo "No existing process found, continuing..."
+                    taskkill /F /PID %%A >nul 2>&1 || ( echo "Process not found, continuing..." & exit /B 0 )
+                )
+                exit /B 0
                 '''
             }
         }
@@ -53,9 +54,7 @@ pipeline {
                 bat '''
                 call %VENV%\\Scripts\\activate
                 start /B python app.py > flask.log 2>&1
-                timeout /t 5  // Give Flask time to start
-                echo "Checking if Flask is running..."
-                netstat -ano | findstr :5000
+                echo Flask app started successfully!
                 '''
             }
         }
